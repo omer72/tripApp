@@ -41,6 +41,29 @@ angular.module('starter.controllers', [])
         }
 })
 
+.controller('MyMessagesCtrl', function($scope, FacebookSrv,$state,$ionicLoading) {
+    getData();
+    function getData(){
+        $ionicLoading.show({
+            template: '<i class="icon ion-loading-c" style="font-size:40px;"></i><br/>Loading...'
+        })
+        FacebookSrv.get('/me/home').then(
+            function success(res){
+                $scope.items = res.data.data;
+                $ionicLoading.hide();
+                $scope.$broadcast('scroll.refreshComplete');
+            },function error(err){
+                $ionicLoading.hide();
+                $state.go('login');
+            }
+        )
+    }
+    $scope.doRefresh = function(){
+        getData();
+    }
+
+})
+
 .controller('MessagesCtrl', function($scope, FacebookSrv,$state,$ionicLoading) {
   getData();
   function getData(){
